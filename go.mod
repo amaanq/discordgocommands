@@ -1,4 +1,4 @@
-module github.com/amaanq/discordgocommands.git
+module github.com/amaanq/discordgocommands
 
 go 1.16
 
