@@ -132,6 +132,9 @@ func (router *Router) Handler() func(*discordgo.Session, *discordgo.MessageCreat
 func (router *Router) EditHandler() func(*discordgo.Session, *discordgo.MessageUpdate) {
 	return func(session *discordgo.Session, event *discordgo.MessageUpdate) {
 		// Define useful variables
+		if event.BeforeUpdate == nil || event.Author == nil {
+			return
+		}
 		message := event.Message
 		content := message.Content
 
