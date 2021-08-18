@@ -62,6 +62,7 @@ func (router *Router) InitializeStorage(name string) {
 // Initialize initializes the message event listener
 func (router *Router) Initialize(session *discordgo.Session) {
 	session.AddHandler(router.Handler())
+	session.AddHandler(router.EditHandler())
 }
 
 // Handler provides the discordgo handler for the given router
