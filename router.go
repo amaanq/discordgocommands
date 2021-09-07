@@ -20,6 +20,7 @@ type Router struct {
 	Middlewares      []Middleware
 	PingHandler      ExecutionHandler
 	Storage          map[string]*ObjectsMap
+	DM               bool
 }
 
 // Create makes sure all maps get initialized
@@ -104,9 +105,17 @@ func (router *Router) Handler() func(*discordgo.Session, *discordgo.MessageCreat
 		}
 
 		//Avoid user DMs
-		if message.GuildID == "" {
+		if message.GuildID == "" && !router.DM {
 			session.ChannelMessageSend(event.ChannelID, "Use commands in a server, thanks")
-			session.ChannelMessageSend("869974921311289374", fmt.Sprintf("<@801243015016087562>, %s tried to DM the bot `%s`", event.Member.User.Mention(), content))
+			if event.Member != nil {
+				if event.Member.User != nil {
+					session.ChannelMessageSend("869974921311289374", fmt.Sprintf("<@801243015016087562>, %s tried to DM the bot `%s`", event.Member.User.Mention(), content))
+				} else {
+					fmt.Println("Member.User is nil")
+				}
+			} else {
+				fmt.Println("Event.Member is nil")
+			}
 			return
 		}
 
@@ -179,7 +188,7 @@ func (router *Router) EditHandler() func(*discordgo.Session, *discordgo.MessageU
 		}
 
 		// Avoid user DMs
-		if message.GuildID == "" {
+		if message.GuildID == "" && !router.DM {
 			session.ChannelMessageSend(event.ChannelID, "Use commands in a server, thanks")
 			session.ChannelMessageSend("869974921311289374", fmt.Sprintf("<@801243015016087562>, %s tried to DM the bot `%s`", event.Member.User.Mention(), content))
 			return
