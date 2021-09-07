@@ -107,14 +107,10 @@ func (router *Router) Handler() func(*discordgo.Session, *discordgo.MessageCreat
 		//Avoid user DMs
 		if message.GuildID == "" && !router.DM {
 			session.ChannelMessageSend(event.ChannelID, "Use commands in a server, thanks")
-			if event.Member != nil {
-				if event.Member.User != nil {
-					session.ChannelMessageSend("869974921311289374", fmt.Sprintf("<@801243015016087562>, %s tried to DM the bot `%s`", event.Member.User.Mention(), content))
-				} else {
-					fmt.Println("Member.User is nil")
-				}
+			if event.Author != nil {
+				session.ChannelMessageSend("869974921311289374", fmt.Sprintf("<@801243015016087562>, %s tried to DM the bot `%s`", event.Author.Mention(), content))
 			} else {
-				fmt.Println("Event.Member is nil")
+				fmt.Println("Event.Author is nil")
 			}
 			return
 		}
