@@ -1,6 +1,7 @@
 package dgc
 
 import (
+	"fmt"
 	"regexp"
 	"strings"
 
@@ -102,6 +103,13 @@ func (router *Router) Handler() func(*discordgo.Session, *discordgo.MessageCreat
 			return
 		}
 
+		//Avoid user DMs
+		if message.GuildID == "" {
+			session.ChannelMessageSend(event.ChannelID, "Use commands in a server, thanks")
+			session.ChannelMessageSend("869974921311289374", fmt.Sprintf("<@801243015016087562>, %s tried to DM the bot `%s`", event.Member.User.Mention(), content))
+			return
+		}
+
 		// Split the messages at any whitespace
 		parts := regexSplitting.Split(content, -1)
 
@@ -167,6 +175,13 @@ func (router *Router) EditHandler() func(*discordgo.Session, *discordgo.MessageU
 
 		// Check if the message is empty after the prefix processing
 		if content == "" {
+			return
+		}
+
+		// Avoid user DMs
+		if message.GuildID == "" {
+			session.ChannelMessageSend(event.ChannelID, "Use commands in a server, thanks")
+			session.ChannelMessageSend("869974921311289374", fmt.Sprintf("<@801243015016087562>, %s tried to DM the bot `%s`", event.Member.User.Mention(), content))
 			return
 		}
 
